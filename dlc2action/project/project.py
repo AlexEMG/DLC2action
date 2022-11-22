@@ -42,7 +42,6 @@ from dlc2action.project.meta import (
     SavedStores,
     Run,
     SavedRuns,
-    Suggestions,
     DecisionThresholds,
 )
 

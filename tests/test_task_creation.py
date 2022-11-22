@@ -4,21 +4,21 @@
 #
 from dlc2action.task.task_dispatcher import TaskDispatcher
 import pytest
+import os
+import shutil
+
+path = os.path.join(os.path.dirname(__file__), "data")
 
 parameters = {
     "data": {
-        "data_path": "/home/liza/data/cricket",
-        "annotation_path": "/home/liza/data/cricket",
-        "behaviors": ["Grooming", "Search", "Pursuit"],
-        "annotation_suffix": {".csv"},
+        "data_path": path,
+        "annotation_path": path,
+        "annotation_suffix": {"2.csv"},
         "data_suffix": {
-            "DLC_resnet50_preycapSep30shuffle1_20000_bx_filtered.h5",
+            "2DeepCut_resnet50_Blockcourse1May9shuffle1_1030000.csv",
         },
-        "default_agent_name": "mouse",
     },
     "features": {
-        "interactive": False,  # bool; if true, distances between two agents are included; if false, only the first agent features are computed
-        "pickled_feature_suffix": None,  # str; the feature files should be stored in the data folder and named {video_id}{h5_feature_suffix}
         "keys": ["coords", "intra_distance"],
     },
     "model": {
@@ -29,7 +29,7 @@ parameters = {
     "general": {
         "ignored_clips": ["single"],
         "data_type": "dlc_track",
-        "annotation_type": "boris",
+        "annotation_type": "csv",
         "model_name": "c2f_tcn",  # str; model name
         "num_classes": "dataset_classes",  # int; number of classes
         "exclusive": False,  # bool; if true, single-label classification is used; otherwise multi-label
@@ -41,6 +41,7 @@ parameters = {
         "feature_extraction": "kinematic",  # str; the feature extraction method (only 'kinematic' at the moment)
         "save_dataset": False,  # bool; if true, pre-computed datasets are saved in a pickled file for faster loading
         "only_load_annotated": True,
+        "overlap": 0.8
     },
     "losses": {
         "ms_tcn": {
@@ -69,6 +70,7 @@ parameters = {
         "batch_size": 16,  # int; batch size
         "model_save_epochs": 5,  # int; interval for saving training checkpoints (the last epoch is always saved)
         "test_frac": 0.2,
+        "partition_method": "random"
     },  # float; fraction of dataset to use as test
 }
 
@@ -80,6 +82,9 @@ def test_task_creation():
     Create a task with set parameters and check that all parameter groups get to the end destination.
     """
 
+    folder = os.path.join(path, "trimmed")
+    if os.path.exists(folder):
+        shutil.rmtree(folder)
     task = TaskDispatcher(parameters)
     # check feature extraction parameters
     sample = task.task.train_dataloader.dataset[0]["input"]
@@ -112,6 +117,9 @@ def test_task_creation():
     assert task.task.model_save_epochs == 5
     # check test_frac
     assert task.task.test_dataloader is not None and len(task.task.test_dataloader) != 0
+    folder = os.path.join(path, "trimmed")
+    if os.path.exists(folder):
+        shutil.rmtree(folder)
 
 
 # test_task_creation()
