@@ -24,6 +24,7 @@ from tqdm import tqdm
 import mimetypes
 
 
+
 class GeneralInputStore(PoseInputStore):
     """
     A generalized realization of a PoseInputStore
