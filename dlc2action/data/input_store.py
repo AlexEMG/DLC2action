@@ -345,6 +345,7 @@ class GeneralInputStore(PoseInputStore):
         if os.name != "nt":
             data = p_map(lambda x: self[x], list(range(len(self))), num_cpus=self.num_cpus)
         else:
+            print("Multiprocessing is not supported on Windows, loading files sequentially.")
             data = [load(x) for x in tqdm(self.data)]
         self.data = TensorDict(data)
         self.ram = True
@@ -1151,6 +1152,7 @@ class FileInputStore(GeneralInputStore):
         if os.name != "nt":
             dict_list = p_map(make_data_dictionary, files, num_cpus=self.num_cpus)
         else:
+            print("Multiprocessing is not supported on Windows, loading files sequentially.")
             dict_list = tqdm([make_data_dictionary(f) for f in files])
 
         self.visibility = {}
@@ -1335,6 +1337,7 @@ class SequenceInputStore(GeneralInputStore):
                 make_data_dictionary, sorted(seq_tuples), num_cpus=self.num_cpus
             )
         else:
+            print("Multiprocessing is not supported on Windows, loading files sequentially.")
             dict_list = tqdm([make_data_dictionary(f) for f in files])
 
         self.visibility = {}
@@ -2394,6 +2397,7 @@ class LoadedFeaturesInputStore(GeneralInputStore):
         if os.name != "nt":
             dict_list = p_map(make_data_dictionary, files, num_cpus=self.num_cpus)
         else:
+            print("Multiprocessing is not supported on Windows, loading files sequentially.")
             dict_list = tqdm([make_data_dictionary(f) for f in files])
 
         self.visibility = {}
