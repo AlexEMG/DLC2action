@@ -63,6 +63,7 @@ def test_evaluation():
     assert "first precision" in table.columns
     assert "first recall" not in table.columns
     Project.remove_project("test_average_evaluation")
+    print('SUCCESS')
 
 
-# test_evaluation()
+test_evaluation()
