@@ -122,7 +122,6 @@ class MS_TCN_Loss(nn.Module):
         Apply cross-entropy loss
         """
 
-        t = t.long()
         if self.exclusive:
             p = p.transpose(2, 1).contiguous().view(-1, self.num_classes)
             t = t.view(-1)
@@ -190,6 +189,7 @@ class MS_TCN_Loss(nn.Module):
             the loss value
         """
 
+        target = target.long()
         if self.need_init:
             if isinstance(predictions, dict):
                 device = predictions["device"]

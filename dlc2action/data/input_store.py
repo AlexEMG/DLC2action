@@ -342,8 +342,10 @@ class GeneralInputStore(PoseInputStore):
         if self.ram:
             return
 
-        data = p_map(lambda x: self[x], list(range(len(self))), num_cpus=self.num_cpus)
-        # data = [load(x) for x in self.data]
+        if os.name != "nt":
+            data = p_map(lambda x: self[x], list(range(len(self))), num_cpus=self.num_cpus)
+        else:
+            data = [load(x) for x in tqdm(self.data)]
         self.data = TensorDict(data)
         self.ram = True
 
@@ -1146,8 +1148,10 @@ class FileInputStore(GeneralInputStore):
             names, lengths, coords = self._make_trimmed_data(data_dict)
             return names, lengths, coords, bp_dict, min_frames, max_frames, video_tag
 
-        # dict_list = p_map(make_data_dictionary, files, num_cpus=self.num_cpus)
-        dict_list = tqdm([make_data_dictionary(f) for f in files])
+        if os.name != "nt":
+            dict_list = p_map(make_data_dictionary, files, num_cpus=self.num_cpus)
+        else:
+            dict_list = tqdm([make_data_dictionary(f) for f in files])
 
         self.visibility = {}
         self.min_frames = {}
@@ -1326,10 +1330,12 @@ class SequenceInputStore(GeneralInputStore):
         for file in files:
             opened = self._open_file(file)
             seq_tuples += opened
-        dict_list = p_map(
-            make_data_dictionary, sorted(seq_tuples), num_cpus=self.num_cpus
-        )
-        # dict_list = tqdm([make_data_dictionary(f) for f in files])
+        if os.name != "nt":
+            dict_list = p_map(
+                make_data_dictionary, sorted(seq_tuples), num_cpus=self.num_cpus
+            )
+        else:
+            dict_list = tqdm([make_data_dictionary(f) for f in files])
 
         self.visibility = {}
         self.min_frames = {}
@@ -2385,8 +2391,10 @@ class LoadedFeaturesInputStore(GeneralInputStore):
             names, lengths, coords = self._make_trimmed_data(data_dict)
             return names, lengths, coords, bp_dict, min_frames, max_frames, video_tag
 
-        dict_list = p_map(make_data_dictionary, files, num_cpus=self.num_cpus)
-        # dict_list = tqdm([make_data_dictionary(f) for f in files])
+        if os.name != "nt":
+            dict_list = p_map(make_data_dictionary, files, num_cpus=self.num_cpus)
+        else:
+            dict_list = tqdm([make_data_dictionary(f) for f in files])
 
         self.visibility = {}
         self.min_frames = {}
