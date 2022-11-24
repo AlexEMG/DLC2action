@@ -130,7 +130,7 @@ class MS_TCN_Loss(nn.Module):
                 return 0
             if self.focal:
                 pr = F.softmax(p[mask], dim=1)
-                print(f'{pr.shape=}, {t.shape=}, {mask.shape=}')
+                print(f'{pr.shape=}, {t.shape=}, {mask.shape=}, {t[mask].shape=}')
                 f = (1 - pr[range(torch.sum(mask)), t[mask].bool()]) ** self.gamma
                 loss = (f * self.ce(p, t)[mask]).mean()
                 return loss
