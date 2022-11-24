@@ -66,10 +66,6 @@ project.run_prediction('prediction_1', episode_names=['episode_1'], data_path='p
 
 Check out the [examples](/examples) or [read the documentation](https://alexemg.github.io/DLC2action/html_docs/dlc2action.html) for a taste of what else you can do.
 
-Note: For now you'll need to download the repo to look at the docs. They will look like this:
-
-![Screenshot](examples/docs_image.png?raw=true "Screenshot of DLC2Action docs.")
-
 
 ## Acknowledgments
 
