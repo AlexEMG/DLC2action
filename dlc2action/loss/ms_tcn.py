@@ -122,6 +122,7 @@ class MS_TCN_Loss(nn.Module):
         Apply cross-entropy loss
         """
 
+        print(f'{self.exclusive=}, {self.focal=}')
         if self.exclusive:
             p = p.transpose(2, 1).contiguous().view(-1, self.num_classes)
             t = t.view(-1)
@@ -131,7 +132,13 @@ class MS_TCN_Loss(nn.Module):
             if self.focal:
                 pr = F.softmax(p[mask], dim=1)
                 print(f'{pr.shape=}, {t.shape=}, {mask.shape=}, {t[mask].shape=}')
-                f = (1 - pr[range(torch.sum(mask)), t[mask].bool()]) ** self.gamma
+                pr_c = torch.ones(pr.shape)
+                t_mask_c = torch.ones(t[mask].shape, dtype=torch.int64)
+                print(f'{t.dtype=}')
+                print(f'{t_mask_c.dtype=}')
+                print(f'{pr[range(torch.sum(mask)), t[mask]].shape=}')
+                print(f'{pr_c[range(torch.sum(mask)), t[mask].cpu()].shape=}')
+                f = (1 - pr[range(torch.sum(mask)), t[mask]]) ** self.gamma
                 loss = (f * self.ce(p, t)[mask]).mean()
                 return loss
             else:
