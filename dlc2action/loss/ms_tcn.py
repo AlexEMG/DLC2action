@@ -123,6 +123,7 @@ class MS_TCN_Loss(nn.Module):
         """
 
         if self.exclusive:
+            t = t.long()
             p = p.transpose(2, 1).contiguous().view(-1, self.num_classes)
             t = t.view(-1)
             mask = t != self.ignore_index
@@ -189,7 +190,6 @@ class MS_TCN_Loss(nn.Module):
             the loss value
         """
 
-        target = target.long()
         if self.need_init:
             if isinstance(predictions, dict):
                 device = predictions["device"]
