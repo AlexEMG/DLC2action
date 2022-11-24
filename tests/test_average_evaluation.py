@@ -14,15 +14,17 @@ def test_evaluation():
 
     Check that everything runs successfully.
     """
+    PROJECTS_PATH = os.path.join(os.path.expanduser('~'), "Projects")
 
     path = os.path.join(os.path.dirname(__file__), "data")
-    Project.remove_project("test_average_evaluation")
+    Project.remove_project("test_average_evaluation", projects_path=PROJECTS_PATH)
     project = Project(
         "test_average_evaluation",
         data_type="dlc_track",
         annotation_type="csv",
         data_path=path,
         annotation_path=path,
+        projects_path=PROJECTS_PATH
     )
     project.update_parameters(
         {
@@ -62,8 +64,7 @@ def test_evaluation():
     assert "first f1" in table.columns
     assert "first precision" in table.columns
     assert "first recall" not in table.columns
-    Project.remove_project("test_average_evaluation")
-    print('SUCCESS')
+    Project.remove_project("test_average_evaluation", projects_path=PROJECTS_PATH)
 
 
 test_evaluation()
