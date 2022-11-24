@@ -1146,8 +1146,8 @@ class FileInputStore(GeneralInputStore):
             names, lengths, coords = self._make_trimmed_data(data_dict)
             return names, lengths, coords, bp_dict, min_frames, max_frames, video_tag
 
-        dict_list = p_map(make_data_dictionary, files, num_cpus=self.num_cpus)
-        # dict_list = tqdm([make_data_dictionary(f) for f in files])
+        # dict_list = p_map(make_data_dictionary, files, num_cpus=self.num_cpus)
+        dict_list = tqdm([make_data_dictionary(f) for f in files])
 
         self.visibility = {}
         self.min_frames = {}
