@@ -136,9 +136,9 @@ class MS_TCN_Loss(nn.Module):
                 t_mask_c = torch.ones(t[mask].shape, dtype=torch.int64)
                 print(f'{t.dtype=}')
                 print(f'{t_mask_c.dtype=}')
-                print(f'{pr[range(torch.sum(mask)), t[mask]].shape=}')
-                print(f'{pr_c[range(torch.sum(mask)), t[mask].cpu()].shape=}')
-                f = (1 - pr[range(torch.sum(mask)), t[mask]]) ** self.gamma
+                # print(f'{pr[range(torch.sum(mask)), t[mask]].shape=}')
+                # print(f'{pr_c[range(torch.sum(mask)), t[mask].cpu()].shape=}')
+                f = (1 - pr[range(torch.sum(mask)), t[mask].long()]) ** self.gamma
                 loss = (f * self.ce(p, t)[mask]).mean()
                 return loss
             else:
